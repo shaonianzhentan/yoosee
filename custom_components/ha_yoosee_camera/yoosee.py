@@ -6,7 +6,7 @@ class Yoosee():
     def __init__(self, ip):
         self.ip = ip
 
-    async move(self, host, ptzCmd):
+    async def move(self, host, ptzCmd):
         MaxBytes = 1024 * 1024
         port = 554
 

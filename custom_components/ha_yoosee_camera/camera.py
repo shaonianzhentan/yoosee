@@ -30,7 +30,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     
     ys = Yoosee(config.get(CONF_IP))
     # 添加PTZ服务
-    async def ptz_left(service):
+    async def ptz(service):
         ip = service.data.get('ip', '')
         cmd = service.data.get('cmd', '').upper()
         if ip == '' or ['UP', 'DOWN', 'LEFT', 'RIGHT'].count() != 1:
