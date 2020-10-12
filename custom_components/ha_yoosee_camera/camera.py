@@ -34,12 +34,12 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
     async def ptz(service):
         ip = service.data.get('ip', '')
         cmd = service.data.get('cmd', '').upper()
-        if ip == '' or ['UP', 'DOWN', 'LEFT', 'RIGHT'].count() != 1:
+        if ip == '' or ['UP', 'DOWN', 'LEFT', 'RIGHT'].count(cmd) != 1:
             return
         # 协议命令为DWON，所以要转一下，不知道为啥
         if cmd == 'DOWN':
             cmd = 'DWON'
-        await ys.move(ip, cmd)
+        hass.async_create_task(ys.move(ip, cmd))
 
     hass.services.async_register(DOMAIN, "ptz", ptz)
     

@@ -5,8 +5,15 @@ class Yoosee():
 
     def __init__(self, ip):
         self.ip = ip
+        self.connected = False
 
     async def move(self, host, ptzCmd):
+        if self.connected:
+            print('正在操作中')
+            return
+        self.connected = True
+        print(ptzCmd)
+
         MaxBytes = 1024 * 1024
         port = 554
 
@@ -43,3 +50,4 @@ class Yoosee():
                 "Session: 12345678\r\n\r\n")
         client.close()
         print("我已经退出了，后会无期")
+        self.connected = False
