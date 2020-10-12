@@ -1,13 +1,7 @@
-# yoosee-ptz.js
+# 在HA里使用的Yoosee摄像头
 
-Very simple nodejs script to pan/tilt yoosee ipcameras (based on npc firmware)
-
-Use:
-
-`#node ptz.js <ipaddress> <UP|DWON|LEFT|RIGHT>`
-
-DWON is not a typo ... :)
-
-
-
-
+```yaml
+camera:
+  - platform: ha_yoosee_camera
+    ip: 192.168.1.114
+```
