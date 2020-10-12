@@ -15,6 +15,7 @@ import homeassistant.helpers.config_validation as cv
 
 _LOGGER = logging.getLogger(__name__)
 
+DOMAIN = 'ha_yoosee_camera'
 CONF_IP = 'ip'
 DEFAULT_NAME = "yoosee"
 
