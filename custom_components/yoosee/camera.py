@@ -41,14 +41,14 @@ class YooseeCamera(Camera):
         self.stream_options = {
             'rtsp_transport': 'udp'
         }
+        self.ys = Yoosee(self._hostname)
         if hass.services.has_service(DOMAIN, SERVICE_PTZ) == False:
             hass.services.async_register(DOMAIN, SERVICE_PTZ, self.ptz)
 
     async def ptz(self, call):
         data = call.data
         if data.get('entity_id') == self.entity_id:
-            ys = Yoosee(self._hostname)
-            ys.ptz(data.get('cmd'))
+            self.ys.ptz(data.get('cmd'))
 
     async def stream_source(self):
         """Return the stream source."""
