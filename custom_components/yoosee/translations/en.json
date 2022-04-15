@@ -1,0 +1,17 @@
+{
+    "config": {
+        "abort": {
+            "single_instance_allowed": "仅允许单个配置"
+        },
+        "step": {
+            "user": {
+                "title": "Yoosee",
+                "description": "",
+                "data": {
+                    "name": "名称",
+                    "url": "RTSP地址"
+                }
+            }
+        }
+    }
+}

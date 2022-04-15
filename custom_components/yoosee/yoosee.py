@@ -3,14 +3,24 @@ import time
 
 class Yoosee():
 
-    def __init__(self, ip):
-        self.ip = ip
+    def __init__(self, host):
+        self.host = host
         self.connected = False
 
-    async def move(self, host, ptzCmd):
+    def ptz(self, cmd):
+        cmd = cmd.upper()
+        if ['UP', 'DOWN', 'LEFT', 'RIGHT'].count(cmd) != 1:
+            return
+        # 协议命令为DWON，所以要转一下，不知道为啥
+        if cmd == 'DOWN':
+            cmd = 'DWON'
+        self.move(cmd)
+
+    def move(self, ptzCmd):
         if self.connected:
             print('正在操作中')
             return
+        host = self.host
         self.connected = True
         print(ptzCmd)
 

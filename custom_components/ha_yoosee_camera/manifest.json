@@ -1,7 +1,0 @@
-{
-    "domain": "ha_yoosee_camera",
-    "name": "Yoosee",
-    "documentation": "https://github.com/shaonianzhentan/ha_yoosee_camera",
-    "requirements": ["ha-ffmpeg==2.0"],
-    "codeowners": []
-  }

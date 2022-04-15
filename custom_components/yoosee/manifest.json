@@ -1,0 +1,10 @@
+{
+  "domain": "yoosee",
+  "name": "\u6709\u770B\u5934",
+  "version": "1.0",
+  "config_flow": true,
+  "documentation": "https://gitee.com/shaonianzhentan/yoosee",
+  "requirements": [],
+  "codeowners": [],
+  "iot_class": "local_polling"
+}

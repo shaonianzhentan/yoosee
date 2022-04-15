@@ -1,1 +1,0 @@
-"""The ha_yoosee_camera component."""

@@ -1,0 +1,22 @@
+ptz:
+  name: 云台控制
+  description: 方向移动
+  fields:
+    entity_id:
+      description: Yoosee摄像头实体
+      required: true
+      selector:
+        entity:
+          integration: yoosee
+    cmd:
+      name: 控制方向命令
+      description: up、down、left、right
+      required: true
+      example: left
+      selector:
+        select:
+          options:
+            - "up"
+            - "down"
+            - "left"
+            - "right"
