@@ -4,7 +4,10 @@
   "version": "1.0",
   "config_flow": true,
   "documentation": "https://gitee.com/shaonianzhentan/yoosee",
-  "requirements": [],
+  "requirements": [
+    "pillow>=9.0.1",
+    "av>=9.1.1"
+  ],
   "codeowners": [],
   "iot_class": "local_polling"
 }

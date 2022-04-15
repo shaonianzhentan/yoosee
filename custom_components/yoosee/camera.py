@@ -14,7 +14,7 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
-import av, io
+import av, io, time
 from .const import DOMAIN, DEFAULT_NAME, VERSION, SERVICE_PTZ
 from urllib.parse import urlparse
 from .yoosee import Yoosee
@@ -37,7 +37,7 @@ class YooseeCamera(Camera):
         self._name = config.get(CONF_NAME)
         self._hostname = parsed.hostname
         self._attr_supported_features = SUPPORT_STREAM
-        self.image_loading = False
+        self.image_ticks = int(time.time())
         self.stream_options = {
             'rtsp_transport': 'udp'
         }
@@ -60,20 +60,24 @@ class YooseeCamera(Camera):
         """Return a still image response from the camera."""
         if not self.stream:
             await self.async_create_stream()
-        if self.stream and self.image_loading == False:
-            self.image_loading = True
-            SOURCE_TIMEOUT = 30
-            container = av.open(self.stream.source, options=self.stream.options, timeout=SOURCE_TIMEOUT)
-            count = 0
-            for frame in container.decode(video=0):
-                count = count + 1
-                if count > 30:
-                    imgByteArr = io.BytesIO()
-                    frame.to_image().save(imgByteArr, format='JPEG')
-                    self.image_loading = False
-                    return imgByteArr.getvalue()
-            
-            self.image_loading = False
+        if self.stream and int(time.time()) - self.image_ticks > 20:
+            # 距离上一次刷新时间20秒，再次更新
+            self.image_ticks = int(time.time())
+            try:
+                SOURCE_TIMEOUT = 30
+                container = av.open(self.stream.source, options=self.stream.options, timeout=SOURCE_TIMEOUT)
+                count = 0
+                for frame in container.decode(video=0):
+                    count = count + 1
+                    if count > 30:
+                        imgByteArr = io.BytesIO()
+                        frame.to_image().save(imgByteArr, format='JPEG')
+                        # 获取成功后，重置时间
+                        self.image_ticks = self.image_ticks - 20
+                        return imgByteArr.getvalue()
+            except Exception as ex:
+                print(ex)
+                self.image_ticks = self.image_ticks - 20
         return None
 
     @property
