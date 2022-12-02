@@ -7,15 +7,16 @@ from homeassistant.config_entries import ConfigFlow, OptionsFlow, ConfigEntry
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 
-from .const import DOMAIN, DEFAULT_NAME
+
 from urllib.parse import urlparse
+from .manifest import manifest
 
 DATA_SCHEMA = vol.Schema({
-    vol.Required("name", default=DEFAULT_NAME): str,
+    vol.Required("name", default=manifest.name): str,
     vol.Required("url"): str
 })
 
-class SimpleConfigFlow(ConfigFlow, domain=DOMAIN):
+class SimpleConfigFlow(ConfigFlow, domain=manifest.domain):
 
     VERSION = 1
 

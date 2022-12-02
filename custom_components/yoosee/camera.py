@@ -15,9 +15,10 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 import av, io, time
-from .const import DOMAIN, DEFAULT_NAME, VERSION, SERVICE_PTZ
+from .const import SERVICE_PTZ
 from urllib.parse import urlparse
 from .yoosee import Yoosee
+from .manifest import manifest
 
 async def async_setup_entry(
     hass,
@@ -34,16 +35,19 @@ class YooseeCamera(Camera):
         url = config.get('url')
         parsed = urlparse(url)
         self._input = url
-        self._name = config.get(CONF_NAME)
-        self._hostname = parsed.hostname
+
+        self._attr_name = config.get(CONF_NAME)
         self._attr_supported_features = SUPPORT_STREAM
+
+        self._hostname = parsed.hostname
         self.image_ticks = int(time.time())
+        self.last_frame = None
         self.stream_options = {
             'rtsp_transport': 'udp'
         }
         self.ys = Yoosee(self._hostname)
-        if hass.services.has_service(DOMAIN, SERVICE_PTZ) == False:
-            hass.services.async_register(DOMAIN, SERVICE_PTZ, self.ptz)
+        if hass.services.has_service(manifest.domain, SERVICE_PTZ) == False:
+            hass.services.async_register(manifest.domain, SERVICE_PTZ, self.ptz)
 
     async def ptz(self, call):
         data = call.data
@@ -74,26 +78,22 @@ class YooseeCamera(Camera):
                         frame.to_image().save(imgByteArr, format='JPEG')
                         # 获取成功后，重置时间
                         self.image_ticks = self.image_ticks - 20
-                        return imgByteArr.getvalue()
+                        self.last_frame = imgByteArr.getvalue()
+                        return self.last_frame
             except Exception as ex:
                 print(ex)
                 self.image_ticks = self.image_ticks - 20
-        return None
-
-    @property
-    def name(self):
-        """Return the name of this camera."""
-        return self._name
+        return self.last_frame
     
     @property
     def device_info(self):
         return {
             "identifiers": {
-                (DOMAIN, self._attr_unique_id)
+                (manifest.domain, self._attr_unique_id)
             },
             "name": self.name,
             "manufacturer": "Yoosee",
             "model": self._hostname,
-            "sw_version": VERSION,
-            "via_device": (DOMAIN, self._attr_unique_id),
+            "sw_version": manifest.version,
+            "via_device": (manifest.domain, self._attr_unique_id),
         }
