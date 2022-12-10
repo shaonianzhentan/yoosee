@@ -6,7 +6,7 @@
   "documentation": "https://gitee.com/shaonianzhentan/yoosee",
   "requirements": [
     "pillow>=9.0.1",
-    "av>=9.1.1"
+    "ha-av>=9.1.1"
   ],
   "codeowners": [],
   "iot_class": "local_polling"
